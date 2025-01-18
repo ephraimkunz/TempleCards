@@ -9,8 +9,16 @@ Converts a PDF from FamilySearch into a PDF with the same cards in a more compac
 
 
 ## How it works
+* Use computer vision to find the dotted lines.
+* Use that to figure out where each card is.
+* Crop cards from original PDF.
+* Rearrange cards into new layout and fill in blank spaces.
+* Fit onto multiple sheets of 8.5 x 11 paper inside a new PDF.
 
 ## Deploying
 * Copy contents of code files into corresponding files on PythonAnywhere.
 * Reload website
 * Find it hosted [here](https://ephraimkunz.pythonanywhere.com)
+
+<img width="1840" alt="Screenshot 2025-01-18 at 2 23 00 PM" src="https://github.com/user-attachments/assets/6ac04a96-66d4-43bb-a94a-a060da6c7af9" />
+
