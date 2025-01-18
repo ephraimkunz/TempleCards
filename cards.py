@@ -76,6 +76,20 @@ def get_outermost_bounding_box(bounding_boxes):
             outer_y_max = y_max
     return (outer_x_min, outer_y_min, outer_x_max, outer_y_max)
 
+def get_outermost_bounding_box_from_lines(lines):
+    outer_x_min, outer_y_min, outer_x_max, outer_y_max = (None, None, None, None)
+    for line in lines:
+        x_min, y_min, x_max, y_max = line[0]  # Extract the line coordinates
+        if outer_x_min is None or x_min < outer_x_min:
+            outer_x_min = x_min
+        if outer_x_max is None or x_max > outer_x_max:
+            outer_x_max = x_max
+        if outer_y_min is None or y_min < outer_y_min:
+            outer_y_min = y_min
+        if outer_y_max is None or y_max > outer_y_max:
+            outer_y_max = y_max
+    return (outer_x_min, outer_y_min, outer_x_max, outer_y_max)
+
 def convert_to_pdf(page_images, output_path):
     # Define PDF page size for 8.5 x 11 inches
     page_width, page_height = letter  # 8.5 x 11 inches in points (612 x 792)
@@ -115,20 +129,23 @@ def convert_pdf(from_file, to_file):
         lines = cv2.HoughLinesP(imgEdges,10,np.pi/180,10, minLineLength = 475, maxLineGap = 15)
 
         # Draw lines on the original image
-        if lines is not None:
-            for line in lines:
-                x1, y1, x2, y2 = line[0]  # Extract the line coordinates
-                cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), 2)  # Draw the line in green color with thickness 2
+        # if lines is not None:
+        #     for line in lines:
+        #         x1, y1, x2, y2 = line[0]  # Extract the line coordinates
+        #         cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), 2)  # Draw the line in green color with thickness 2
 
-        # Display the image with lines
-        cv2.imshow('Lines on Image', img)
-        cv2.waitKey(3000)  # Wait for a key press
-        # cv2.destroyAllWindows()  # Close all OpenCV windows
+        # # Display the image with lines
+        # cv2.imshow('Lines on Image', img)
+        # cv2.waitKey(3000)  # Wait for a key press
 
-        horizontal_lines, vertical_lines = group_lines(lines)
-        intersections = find_intersections(horizontal_lines, vertical_lines)
-        bounding_boxes = find_bounding_boxes(intersections)
-        outer_x_min, outer_y_min, outer_x_max, outer_y_max = get_outermost_bounding_box(bounding_boxes)
+        # We used to do all this but I think it's not necessary:
+
+        # horizontal_lines, vertical_lines = group_lines(lines)
+        # intersections = find_intersections(horizontal_lines, vertical_lines)
+        # bounding_boxes = find_bounding_boxes(intersections)
+        # outer_x_min, outer_y_min, outer_x_max, outer_y_max = get_outermost_bounding_box(bounding_boxes)
+
+        outer_x_min, outer_y_min, outer_x_max, outer_y_max = get_outermost_bounding_box_from_lines(lines)
             
         # Display image with bounding box
         if outer_x_min is None or outer_x_max is None or outer_y_min is None or outer_y_max is  None:
